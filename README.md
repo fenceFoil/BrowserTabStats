@@ -1,3 +1,7 @@
+# Browser Tab Stats
+
+Archive your Firefox tab count daily and make graphs to show your friends! 
+
 ## BrowserTabGrapher
 
 IN PROGRESS
