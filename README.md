@@ -20,6 +20,8 @@ Run regularly from cron or Windows Task Scheduler!
 
 Logs errors, and optionally pushes notifications to your phone using the awesome and dockerized server app [Gotify](https://gotify.net/) so that you can correct issues with minimal archiving disruption. (Supply your gotify address and a new app key).
 
+![Usecase Diagram](doc/BrowserArchiverDiagrams.png)
+
 ### How to extend for Chrome
 
 Someday I know I'll switch back for some reason!
@@ -66,11 +68,11 @@ TABLE: ArchivedTabs
 * snapshotID
   * generate this UUID each time you check the profile
 * title
-  * /windows[#]/tabs[#]/entries[0]/title
+  * /windows[#]/tabs[#]/entries[ (/windows/[#]/tabs[#]/index) ]/title
 * url
-  * /windows[#]/tabs[#]/entries[0]/url
+  * /windows[#]/tabs[#]/entries[ (/windows/[#]/tabs[#]/index) ]/url
 * tabID
-  * /windows[#]/tabs[#]/entries[0]/ID
+  * /windows[#]/tabs[#]/entries[ (/windows/[#]/tabs[#]/index) ]/ID
 * tabWindow 
   * (starts at 0)
   * /windows[THIS]
