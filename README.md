@@ -16,7 +16,7 @@ Saves a time-series database of all the tabs you leave open in your Firefox brow
 
 Run regularly from cron or Windows Task Scheduler!
 
-![Gotify Logo](https://gotify.net/img/logo.png)
+![Gotify Logo](https://gotify.net/img/logo.png =100x100)
 
 Logs errors, and optionally pushes notifications to your phone using the awesome and dockerized server app [Gotify](https://gotify.net/) so that you can correct issues with minimal archiving disruption. (Supply your gotify address and a new app key).
 
