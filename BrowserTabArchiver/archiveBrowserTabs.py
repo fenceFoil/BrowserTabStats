@@ -17,7 +17,7 @@ if __name__ == "__main__":
     logFormatter = logging.Formatter(logFormat)
 
     # Log to a file and to the error stream
-    logging.basicConfig(filename='archiveBrowserTabsLog.txt', level=logging.DEBUG, format=logFormat)
+    logging.basicConfig(filename='data/archiveBrowserTabsLog.txt', level=logging.DEBUG, format=logFormat)
     streamHandler = logging.StreamHandler()
     streamHandler.setFormatter(logFormatter)
     streamHandler.setLevel(logging.DEBUG)
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     try:
         info ('Loading config from config.json...')
         config = {}
-        with open('config.json') as f:
+        with open('data/config.json') as f:
             config = json.load(f)
 
         # Setup gotify error logging
@@ -38,9 +38,9 @@ if __name__ == "__main__":
                 logging.getLogger().addHandler(gotifyHandler)
 
                 # Test gotify error logging
-                if not os.path.isfile('gotifyWasTested'):
+                if not os.path.isfile('data/gotifyWasTested'):
                     warning("New gotify logger set up. This is a test message.")
-                    open('gotifyWasTested', 'a').close()
+                    open('data/gotifyWasTested', 'a').close()
 
         info ("=== Beginning Tab Data Archiving ===")
 
@@ -49,10 +49,10 @@ if __name__ == "__main__":
         if not os.path.isfile(config['restoreSessionLocation']):
             error('The Firefox tab session restore file was not found! Tried {}'.format(config['restoreSessionLocation']))
             sys.exit(1)
-        copyfile(config['restoreSessionLocation'], 'recovery.jsonlz4')
+        copyfile(config['restoreSessionLocation'], 'data/recovery.jsonlz4')
         info ('Decompressing tab data...')
         tabJSON = None
-        with open('recovery.jsonlz4', 'rb') as f:
+        with open('data/recovery.jsonlz4', 'rb') as f:
             tabJSON = mozlz4a.decompress(f)
 
         # Import Firefox tab data
@@ -60,9 +60,9 @@ if __name__ == "__main__":
         tabData = json.loads(tabJSON)
 
         # Create database if it does not already exist
-        if not os.path.isfile('tabArchive.db'):
+        if not os.path.isfile('data/tabArchive.db'):
             warning('tabArchive.db not found, creating new db...')
-            conn = sqlite3.connect('tabArchive.db')
+            conn = sqlite3.connect('data/tabArchive.db')
             conn.execute('''CREATE TABLE ArchiveSnapshots (
                 snapshotID TEXT, 
                 snapshotTime INTEGER, 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
         # Open database
         info("Opening tab archive database...")
-        conn = sqlite3.connect('tabArchive.db')
+        conn = sqlite3.connect('data/tabArchive.db')
 
         # Write tab data into database
         info("Writing tab snapshot...")
@@ -104,55 +104,59 @@ if __name__ == "__main__":
         )
         conn.execute("INSERT INTO ArchiveSnapshots VALUES (?,?,?,?,?,?)", snapshotInfo)
 
-        # Write tab info
-        currWindow = -1
-        currTab = -1
-        try:
-            #temp = []
-            for windowNum, windowData in enumerate(tabData['windows']):
-                for tabNum, tabData in enumerate(windowData['tabs']):
-                    currWindow = windowNum # note debug info
-                    currTab = tabNum # note debug info
+        if config['saveTabURLs']:
+            # Write tab info
+            info("Saving URLs of each open tab")
+            currWindow = -1
+            currTab = -1
+            try:
+                #temp = []
+                for windowNum, windowData in enumerate(tabData['windows']):
+                    for tabNum, tabData in enumerate(windowData['tabs']):
+                        currWindow = windowNum # note debug info
+                        currTab = tabNum # note debug info
 
-                    #temp.append(len(tabData['entries']))
+                        #temp.append(len(tabData['entries']))
 
-                    title = None
-                    url = None
-                    tabID = None
-                    if 'entries' in tabData and len(tabData['entries']) > 0:
-                        currEntryIndex = tabData['index'] - 1
-                        if currEntryIndex < 0:
-                            # Indicates that the user hasn't navigated anywhere yet on this tab.
-                            # Weird.
-                            pass
-                        elif currEntryIndex == 0 and len(tabData['entries']) <= 0:
-                            # Indicates that the user hasn't navigated anywhere yet on this tab.
-                            # Weird.
-                            pass
-                        elif currEntryIndex >= 1 and currEntryIndex >= len(tabData['entries']):
-                            # Edge case: tab index points beyond end of list of entries!!!!
-                            warning("Tab index beyond end of tab entries: len entries = {}, index = {}, tabNum = {}, windowNum = {}".format(len(tabData['entries']), currEntryIndex, tabNum, windowNum))
-                        else:
-                            currEntry = tabData['entries'][currEntryIndex]
-                            title = currEntry['title']
-                            url = currEntry['url']
-                            tabID = currEntry['ID']
+                        title = None
+                        url = None
+                        tabID = None
+                        if 'entries' in tabData and len(tabData['entries']) > 0:
+                            currEntryIndex = tabData['index'] - 1
+                            if currEntryIndex < 0:
+                                # Indicates that the user hasn't navigated anywhere yet on this tab.
+                                # Weird.
+                                pass
+                            elif currEntryIndex == 0 and len(tabData['entries']) <= 0:
+                                # Indicates that the user hasn't navigated anywhere yet on this tab.
+                                # Weird.
+                                pass
+                            elif currEntryIndex >= 1 and currEntryIndex >= len(tabData['entries']):
+                                # Edge case: tab index points beyond end of list of entries!!!!
+                                warning("Tab index beyond end of tab entries: len entries = {}, index = {}, tabNum = {}, windowNum = {}".format(len(tabData['entries']), currEntryIndex, tabNum, windowNum))
+                            else:
+                                currEntry = tabData['entries'][currEntryIndex]
+                                title = currEntry['title']
+                                url = currEntry['url']
+                                tabID = currEntry['ID']
 
-                    tabInfo = (
-                        snapshotID,
-                        title,
-                        url,
-                        tabID,
-                        windowNum,
-                        tabNum,
-                        tabData['lastAccessed']
-                    )
-                    conn.execute("INSERT INTO ArchivedTabs VALUES (?,?,?,?,?,?,?)", tabInfo)
-            #import statistics
-            #debug("len {}, mean {}, median {}, mode {}, range {}, min {}, max {}".format(len(temp), statistics.mean(temp), statistics.median(temp), statistics.mode(temp), max(temp) - min(temp), min(temp), max(temp)))
-            #debug("indexes of 0 entries: {}".format([ i for i in range(len(temp)) if temp[i] == 0 ]))
-        except Exception as e:
-            logging.exception("Uncaught exception while archiving tabs (iterating through specific tab info: window {}, tab {}). Snapshot not archived.".format(currWindow, currTab))
+                        tabInfo = (
+                            snapshotID,
+                            title,
+                            url,
+                            tabID,
+                            windowNum,
+                            tabNum,
+                            tabData['lastAccessed']
+                        )
+                        conn.execute("INSERT INTO ArchivedTabs VALUES (?,?,?,?,?,?,?)", tabInfo)
+                #import statistics
+                #debug("len {}, mean {}, median {}, mode {}, range {}, min {}, max {}".format(len(temp), statistics.mean(temp), statistics.median(temp), statistics.mode(temp), max(temp) - min(temp), min(temp), max(temp)))
+                #debug("indexes of 0 entries: {}".format([ i for i in range(len(temp)) if temp[i] == 0 ]))
+            except Exception as e:
+                logging.exception("Uncaught exception while archiving tabs (iterating through specific tab info: window {}, tab {}). Snapshot not archived.".format(currWindow, currTab))
+        else:
+            info('NOT saving URLs of each open tab (as set by "saveTabURLs":false in config.json')
 
         # Commit new data into database
         info("Committing new tab archive snapshot into database...")
@@ -160,7 +164,7 @@ if __name__ == "__main__":
         conn.close()
 
         # Clean up
-        for tempFile in ['recovery.jsonlz4']:
+        for tempFile in ['data/recovery.jsonlz4']:
             os.remove(tempFile)
 
         # Announce a warning if the tab session looks stale

@@ -1,5 +1,6 @@
 {
     "restoreSessionLocation":"C:/Users/BJ/AppData/Roaming/Mozilla/Firefox/Profiles/p88sxjn3.default-15515165133/sessionstore-backups/recovery.jsonlz4",
+    "saveTabURLs":true,
     "logging": {
         "gotify": {
             "enabled":false,

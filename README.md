@@ -1,8 +1,22 @@
+## BrowserTabGrapher
+
+IN PROGRESS
+
+Create a report of how many tabs you have open and put it online!
+
+Compare with your friends!
+
+Do you have what it takes to open the most browser tabs???
+
 ## BrowserTabArchiver
 
 ![Banner](TabArchiver.png)
 
 Saves a time-series database of all the tabs you leave open in your Firefox browser from recovery.jsonlz4 into SQLite.
+
+Run regularly from cron or Windows Task Scheduler!
+
+![Gotify Logo](https://gotify.net/img/logo.png)
 
 Logs errors, and optionally pushes notifications to your phone using the awesome and dockerized server app [Gotify](https://gotify.net/) so that you can correct issues with minimal archiving disruption. (Supply your gotify address and a new app key).
 
