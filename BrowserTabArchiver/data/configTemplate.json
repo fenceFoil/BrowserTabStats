@@ -1,0 +1,11 @@
+{
+    "restoreSessionLocation":"C:/Users/BJ/AppData/Roaming/Mozilla/Firefox/Profiles/p88sxjn3.default-15515165133/sessionstore-backups/recovery.jsonlz4",
+    "logging": {
+        "gotify": {
+            "enabled":false,
+            "address":"http://example.com:80",
+            "apiKey":"ASRNjVp6wbD5yQD",
+            "priority":8
+        }
+    }
+}

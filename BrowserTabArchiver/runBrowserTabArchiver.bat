@@ -1,0 +1,3 @@
+call BrowserTabArchiverVenv/Scripts/activate.bat
+python archiveBrowserTabs.py
+exit

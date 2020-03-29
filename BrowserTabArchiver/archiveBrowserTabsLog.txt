@@ -1,0 +1,6 @@
+[INFO] 2020-03-29 02:53:22,643: Loading config from config.json...
+[ERROR] 2020-03-29 02:53:22,643: Uncaught exception while archiving tabs. Snapshot not archived.
+Traceback (most recent call last):
+  File "archiveBrowserTabs.py", line 29, in <module>
+    with open('config.json') as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'config.json'

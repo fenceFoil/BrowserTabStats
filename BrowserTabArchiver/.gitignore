@@ -1,0 +1,8 @@
+investigation/
+BrowserTabArchiverVenv/
+data/gotifyWasTested
+data/archiveBrowserTabsLog.txt
+Archive Browser Tabs Windows Task Scheduler.xml
+data/tabArchive.db
+data/config.json
+__pycache__
