@@ -1,10 +1,11 @@
+// When finished, rename this file "config.json" and remove this comment.
 {
     "restoreSessionLocation":"C:/Users/BJ/AppData/Roaming/Mozilla/Firefox/Profiles/p88sxjn3.default-15515165133/sessionstore-backups/recovery.jsonlz4",
-    "saveTabURLs":true,
+    "saveTabURLs":true, // makes database more interesting to analyze, but larger and more personal.
     "logging": {
         "gotify": {
             "enabled":false,
-            "address":"http://example.com:80",
+            "address":"http://my-gotify-server's-address.com:80",
             "apiKey":"ASRNjVp6wbD5yQD",
             "priority":8
         }

@@ -1,12 +1,11 @@
 # Browser Tab Stats
 
-Archive your Firefox tab count daily and make graphs to show your friends! 
+Visit https://www.williamkarnavas.com/opentabs/ !
 
-## BrowserTabGrapher
+![Website with graph](doc/websitefun.png)
+*Photo by Lukas from Pexels*
 
-IN PROGRESS
-
-Create a report of how many tabs you have open and put it online!
+Create a live report of how many tabs you have open and put it online!
 
 Compare with your friends!
 
@@ -14,21 +13,19 @@ Do you have what it takes to open the most browser tabs???
 
 ## BrowserTabArchiver
 
-![Banner](TabArchiver.png)
+![Banner](doc/TabArchiver.png)
 
-Saves a time-series database of all the tabs you leave open in your Firefox browser from recovery.jsonlz4 into SQLite.
+Records a time-series database of all the tabs you leave open in your Firefox browser from recovery.jsonlz4 into SQLite.
 
 Run regularly from cron or Windows Task Scheduler!
 
-![Gotify Logo](doc/GotifyLogo.png)
-
 Logs errors, and optionally pushes notifications to your phone using the awesome and dockerized server app [Gotify](https://gotify.net/) so that you can correct issues with minimal archiving disruption. (Supply your gotify address and a new app key).
+
+After the data is recorded into SQLite, `updateStaticPageData.py` queries the numTabs column and puts it into a data file to upload to your website.
 
 ![Usecase Diagram](doc/BrowserArchiverDiagrams.png)
 
 ### How to extend for Chrome
-
-Someday I know I'll switch back for some reason!
 
 The following 4 files are simliar to recovery.jsonlz4:
 
@@ -45,9 +42,11 @@ git checkout origin/SNSS
 C:\Python27\python.exe chromagnonSession.py "Last Session"
 ```
 
-... this prints the restore session commands to the console. There is also programmatic access to build into this project in the future if wanted.
+... this prints the restore session commands to the console if the "Last Session" file is in the current folder. There is also programmatic access to build into this project in the future if wanted.
 
-### Installation
+useful resource: https://softwarerecs.stackexchange.com/questions/19500/tool-to-read-data-from-google-chrome-snss-files
+
+## Installation
 
 Tested with Python 3.7
 
@@ -63,9 +62,15 @@ Fill out `configTemplate.json` with the appropriate values and save as `config.j
 
 Run using `python archiveBrowswerTabs.py`
 
+## Website Setup
+
+I hosted the static website on Amazon AWS S3 easily and for free following [this article](https://medium.com/@channaly/how-to-host-static-website-with-https-using-amazon-s3-251434490c59).
+
+Be sure to set the default time to live on all the resources for the graph website to be pretty short and not the default entire day.
+
 ### Database Scheme
 
-In file BrowserTabArchive.db
+In SQLite file data/tabArchive.db:
 
 TABLE: ArchivedTabs
 

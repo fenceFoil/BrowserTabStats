@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <head>
+            <script src="https://cdn.plot.ly/plotly-1.52.3.min.js"></script>
+        </head>
+        <script src="open-tabs-data.js"></script>
+    </head>
+    <body>
+        <div id="timeseriesGraph" style="width:90vw;height:90vh"></div>
+        <script>
+            // TODO: Attractive markers (little tab or firefox logos?), attractive line color
+            // TODO: Calculate and display mean, median, mode, range(?), min, max
+
+            var numTabsTrace = {
+                // Timestamps
+                x: openTabsDataTimestamps,
+                // Num tabs
+                y: openTabsCount,
+                mode: 'lines+markers+text',
+                name: 'Open Tabs in Firefox',
+                //texttemplate: "%{x|%-m/%-d}<br>%{y}",
+                texttemplate: "%{y}",
+                textposition: "bottom center",
+                marker: {
+                    size: 5,
+                    symbol: "square",
+                    color: "orange"
+                },
+                line: {
+                    dash: 'dot',
+                    width: 1,
+                    color: "gray"
+                    //shape: 'spline',
+                    //smoothing: 1
+                }
+            }
+
+            var data = [ numTabsTrace ];
+
+            var layout = {
+                title: 'Open Browser Tabs',
+                xaxis: {
+                    //autorange: true,
+                    range: [(new Date).getTime()-1000*60*60*24*7, (new Date).getTime()],
+                    title: 'date',
+                    rangeslider: {},
+                    rangeselector: {
+                        buttons: [
+                            {
+                                count: 7,
+                                label: '1w',
+                                step: 'day',
+                                stepmmod: 'backward'
+                            },
+                            {
+                                count: 1,
+                                label: '1m',
+                                step: 'month',
+                                stepmode: 'backward'
+                            },
+                            {
+                                count: 6,
+                                label: '6m',
+                                step: 'month',
+                                stepmode: 'backward'
+                            },
+                            {
+                                step: 'year',
+                                stepmode: 'todate',
+                                count: 1,
+                                label: 'YTD'
+                            },
+                            {
+                                step: 'all'
+                            }
+                        ]
+                    }
+                },
+                yaxis: {
+                    title: 'tabs',
+                    //autorange: true,
+                    range: [0, Math.round(Math.max ( ...openTabsCount )*1.05)],
+                    tickangle: -45,
+                    tick0: 0,
+                    dtick: 50
+                }
+            };
+
+            Plotly.newPlot( 'timeseriesGraph', data, layout, {responsive: true} );
+        </script>
+    </body>
+</html>

@@ -175,5 +175,6 @@ if __name__ == "__main__":
             warning("Firefox tab session file stale: {} last updated {} days ago.".format(config['restoreSessionLocation'], sessionUpdatedAge.days))
 
         info("=== Tab archive completed! ===")
+
     except Exception as e:
         logging.exception("Uncaught exception while archiving tabs. Snapshot not archived.")

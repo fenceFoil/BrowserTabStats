@@ -5,4 +5,6 @@ data/archiveBrowserTabsLog.txt
 Archive Browser Tabs Windows Task Scheduler.xml
 data/tabArchive.db
 data/config.json
+obsolete/
 __pycache__
+staticPageOut/open-tabs-data.js
